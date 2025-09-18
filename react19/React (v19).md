@@ -1923,60 +1923,64 @@ export function App() {
 
 ### 5.09 useOptimistic
 
-> === 检测状态更新时立即更新 UI、不再等待 更新状态所需的后续操作
+> === 检测状态变更操作时立即触发重新渲染、而非等待状`态变更操作后续代码`执行完毕
 
 - [x] const [state, triggerStateFn] = useOptimistic(initState, updateStateFn);
-- [x] 仅 react server component [RSC] 环境下可用
 
 
 
-- **Page.tsx [next]**
+- **src/App.jsx**
 
-~~~tsx
-"use client"
-
+~~~jsx
 import { useOptimistic } from "react";
 
-interface Goods {
-    id: number;
-    name: string;
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export default function Page() {
+function updateState(userList, optimistic) {
+    return userList.filter(user => user.id !== optimistic);
+}
 
-    const goodsList: Goods[] = [
-        {
-            id: 1,
-            name: "飞科剃须刀"
-        },
-        {
-            id: 2,
-            name: "JavaScript实战编程书籍"
-        },
-
-    ];
-
-    function updateGoodsList(goodsList: Goods[], id: number) {
-        return goodsList.filter(goods => goods.id !== id);
+let userList = [
+    {
+        id: 1,
+        name: "John",
+    },
+    {
+        id: 2,
+        name: "James",
+    },
+    {
+        id: 3,
+        name: "Jersey",
     }
+];
 
-    const [optimisticGoodsList, addOptimisticGoodsId] = useOptimistic(goodsList, updateGoodsList);
+export function App() {
 
-    async function deleteGoodsById(id: number) {
-        addOptimisticGoodsId(id);
-        await new Promise(resolve => setTimeout(resolve, 4000));
+    const [ state, addOptimistic ] = useOptimistic(userList, updateState);
+
+    async function deleteById(id) {
+        console.log(id);
+        addOptimistic(id); // 触发重新渲染
+        userList = userList.filter(user => user.id !== id); // 难以优化的业务操作 [网络请求]
+        await sleep(3000); // 故意的耗时操作
     }
 
     return (
-        <div className="p-10 bg-amber-200">
-            <ul>
+        <div className="p-10 bg-slate-200">
+            <ul className="flex flex-col gap-5">
                 {
-                    optimisticGoodsList.map(({ name, id }: Goods) => (
-                        <li key={ id } className="flex items-center">
-                            <span>{ name }</span>
-                            <form action={ () => deleteGoodsById(id) }>
-                                <button className="p-5 bg-amber-300"
-                                        type="submit">delete</button>
+                    state.map((user) => (
+                        <li className="flex gap-5 items-center" key={ user.id }>
+                            <span>{ user.name }</span>
+                            <form action={ deleteById.bind(null, user.id) } 
+                                className="flex flex-col gap-5">
+                                <button className="p-2 bg-rose-500 text-white cursor-pointer"
+                                        type="submit">
+                                    delete
+                                </button>
                             </form>
                         </li>
                     ))
@@ -1986,6 +1990,75 @@ export default function Page() {
     )
 }
 ~~~
+
+- **src/App.jsx [useState 版本]**
+
+~~~jsx
+import { useOptimistic, useState } from "react";
+
+async function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function updateState(userList, optimistic) {
+    return userList.filter(user => user.id !== optimistic);
+}
+
+let userList = [
+    {
+        id: 1,
+        name: "John",
+    },
+    {
+        id: 2,
+        name: "James",
+    },
+    {
+        id: 3,
+        name: "Jersey",
+    }
+];
+
+export function App() {
+
+    // const [ state, addOptimistic ] = useOptimistic(userList, updateState);
+
+    const [ state, setState ] = useState(userList);
+
+    async function deleteById(id) {
+        console.log(id);
+
+        // addOptimistic(id);
+        setState(p => p.filter(user => user.id !== id));
+
+        userList = userList.filter(user => user.id !== id);
+        await sleep(3000);
+    }
+
+    return (
+        <div className="p-10 bg-slate-200">
+            <ul className="flex flex-col gap-5">
+                {
+                    state.map((user) => (
+                        <li className="flex gap-5 items-center" key={ user.id }>
+                            <span>{ user.name }</span>
+                            <form action={ deleteById.bind(null, user.id) } 
+                                className="flex flex-col gap-5">
+                                <button className="p-2 bg-rose-500 text-white cursor-pointer"
+                                        type="submit">
+                                    delete
+                                </button>
+                            </form>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    )
+}
+~~~
+
+
 
 ### 5.10 useTransition
 
