@@ -1947,7 +1947,7 @@ let userList = [
         id: 1,
         name: "John",
     },
-    {
+    {1
         id: 2,
         name: "James",
     },
@@ -1964,7 +1964,7 @@ export function App() {
     async function deleteById(id) {
         console.log(id);
         addOptimistic(id); // 触发重新渲染
-        userList = userList.filter(user => user.id !== id); // 难以优化的业务操作 [网络请求]
+        userList = userList.filter(user => user.id !== id); // 耗时的业务操作 [网络请求]
         await sleep(3000); // 故意的耗时操作
     }
 
