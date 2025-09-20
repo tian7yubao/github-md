@@ -24,7 +24,7 @@
 
 
 
-### 1.1 官方文档
+### 1.1 文档
 
 > === https://tailwindcss.com/docs/installation/using-vite
 
@@ -60,7 +60,7 @@
 
 
 
-### 1.4 付费服务
+### 1.4 模版服务
 
 > === https://tailwindcss.com/plus/templates?ref=sidebar
 
@@ -70,7 +70,7 @@
 
 
 
-### 1.5 官方组件
+### 1.5 组件
 
 > === https://tailwindcss.com/plus/ui-blocks?ref=sidebar
 
@@ -90,7 +90,7 @@
 
 
 
-### 1.6 博客新闻
+### 1.6 博客
 
 > === https://tailwindcss.com/blog
 
@@ -100,7 +100,7 @@
 
 
 
-### 1.7 社区插件
+### 1.7 插件
 
 > === https://tailscan.com/
 
@@ -170,6 +170,14 @@
 
 
 ### 2.2 Tailwind CLI
+
+> === https://nodejs.org/zh-cn
+
+- **ui**
+
+![image-20250920165014433](Tailwind [v4.1].assets/image-20250920165014433.png)
+
+
 
 > === https://tailwindcss.com/docs/installation/tailwind-cli
 
@@ -571,7 +579,10 @@ export function App() {
 
 > === WebStorm 内置 Tailwind Language Server 语言服务引擎
 
+- [x] 推荐最新版本: https://www.jetbrains.com/webstorm/download/other.html
 - [x] 引擎自动开启、无需其它配置、可自动提示 Tailwind、可检测类选择器
+
+
 
 - **ui**
 
@@ -582,14 +593,6 @@ export function App() {
 - **ui**
 
 ![image-20250920042808740](Tailwind [v4.1].assets/image-20250920042808740.png)
-
-
-
-> === 列编辑: ALT + SHIFT + INSERT [二次按下为取消列编辑状态]
-
-- **ui**
-
-![image-20250920044435371](Tailwind [v4.1].assets/image-20250920044435371.png)
 
 
 
@@ -668,3 +671,510 @@ export function App() {
 
 > === https://tailwindcss.com/docs/preflight
 
+
+
+### 4.1 modern-normaliz
+
+> === https://github.com/sindresorhus/modern-normalize
+
+- [x] Tailwind 使用 modern-normaliz 初始化 HTML 及常用元素样式初始化
+- [x] node_modules/tailwindcss/preflight.css
+
+
+
+- **ui**
+
+![image-20250920150953029](Tailwind [v4.1].assets/image-20250920150953029.png)
+
+
+
+- **preflight.css**
+
+~~~css
+*,
+::after,
+::before,
+::backdrop,
+::file-selector-button {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border: 0 solid;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+    display: block; /* 1 */
+    vertical-align: middle; /* 2 */
+}
+~~~
+
+
+
+### 4.2 @layer
+
+> === Tailwind 内置 theme | base | components | utilities 分层全局管理样式
+
+- **globals.css**
+
+~~~css
+@import "tailwindcss";
+~~~
+
+- **globals.css**
+
+~~~css
+@layer theme, base, components, utilities;
+
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css" layer(utilities);
+~~~
+
+### 4.3 @layer theme
+
+> === 主题层定义 Tailwind 内置各种全局变量、颜色、动画、间距 等 ...
+
+- **node_modules/tailwindcss/theme.css**
+
+~~~css
+@theme default {
+    
+    --color-red-50: oklch(97.1% 0.013 17.38);
+    --color-red-100: oklch(93.6% 0.032 17.717);
+    --color-red-200: oklch(88.5% 0.062 18.334);
+    --color-red-300: oklch(80.8% 0.114 19.571);
+    --color-red-400: oklch(70.4% 0.191 22.216);
+    --color-red-500: oklch(63.7% 0.237 25.331);
+    --color-red-600: oklch(57.7% 0.245 27.325);
+    --color-red-700: oklch(50.5% 0.213 27.518);
+    --color-red-800: oklch(44.4% 0.177 26.899);
+    --color-red-900: oklch(39.6% 0.141 25.723);
+    --color-red-950: oklch(25.8% 0.092 26.042);
+
+    --blur-xs: 4px;
+    --blur-sm: 8px;
+    --blur-md: 12px;
+    --blur-lg: 16px;
+    --blur-xl: 24px;
+    --blur-2xl: 40px;
+    --blur-3xl: 64px;
+    
+    --spacing: 0.25rem; // html 16px * 0.25 ==> 4px
+                        //              w-5 ==> width: 20px
+                        //              p-5 ==> padding: 20px
+
+    @keyframes spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    --animate-spin: spin 1s linear infinite;
+
+    ...
+    
+}
+~~~
+
+- **node_modules/tailwindcss/index.css**
+
+~~~css
+@layer theme, base, components, utilities;
+
+@layer theme {
+    @theme default {
+        ...
+        --color-red-100: oklch(93.6% 0.032 17.717);
+        --color-red-200: oklch(88.5% 0.062 18.334);
+        --color-red-300: oklch(80.8% 0.114 19.571);      
+        ...
+    }
+}
+~~~
+
+
+
+- **globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@theme {
+    --font-serif: ui-sans-serif, system-ui, sans-serif;
+}
+~~~
+
+
+
+### 4.4 @layer base
+
+> === 完成 HTML 样式初始化、全局样式默认内外边距、盒子模型 等 ...
+
+
+
+- **node_modules/tailwindcss/index.css**
+
+~~~css
+@layer theme, base, components, utilities;
+
+@layer theme {
+    ...
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+    	box-sizing: border-box; /* 1 */
+        margin: 0; /* 2 */
+        padding: 0; /* 2 */
+        border: 0 solid; /* 3 */
+    }
+    
+    ...
+}
+~~~
+
+- **globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@layer base {
+    h1 {
+        font-size: 36px;
+    }
+}
+~~~
+
+### 4.5 @layer utilities
+
+> === utilities 表示内置程序类 p-5 | pt-2 | text-white 等 ... [通过解析生成]
+
+- [x] @layer utilities 应当定义 Tailwind 还没有内置的实用程序类
+
+
+
+- **node_modules/tailwindcss/index.css**
+
+~~~css
+@layer theme, base, components, utilities;
+
+@layer theme {
+    ...
+}
+
+@layer base {
+    *,
+    ::after,
+    ::before,
+    ::backdrop,
+    ::file-selector-button {
+    	box-sizing: border-box; /* 1 */
+        margin: 0; /* 2 */
+        padding: 0; /* 2 */
+        border: 0 solid; /* 3 */
+    }
+    
+    ...
+}
+
+@layer utilities {
+	@tailwind utilities;
+}
+~~~
+
+
+
+- **node_modules/tailwindcss/utilities.css**
+
+~~~css
+@tailwind utilities;
+~~~
+
+- **globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@utility animmate-paused {
+    animation-play-state: paused;
+}
+
+@utility animmate-delay-1500 {
+    animation-delay: 3000ms;
+}
+
+@utility animmate-delay-3000 {
+    animation-delay: 3000ms;
+}
+~~~
+
+
+
+### 4.5 @layer components
+
+> @layer components {} 层是预留给开发者编写的自定义类、在入口文件编写
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@layer components {
+    .btn {
+        @apply px-3 py-2 bg-rose-500 text-white;
+    }
+
+    .btn-developer {
+        background-color: blue;
+        padding: 10px;
+        color: white;
+    }
+}
+~~~
+
+> [!note]
+>
+> - [x] @components 自定义类选择器、不具有任何特殊性、也不可 hover:btn 方式使用
+> - [x] utilities   视作为 Tailwind 自身的一部分、可 hover:animmate-paused 使用
+
+
+
+## 05. 核心机制
+
+> === https://tailwindcss.com/docs/styling-with-utility-classes
+
+- **ui**
+
+![image-20250920170130863](Tailwind [v4.1].assets/image-20250920170130863.png)
+
+
+
+### 4.1 规则
+
+> === 通常一个 css property 对应一个类选择器、采用 [属性 + 对应值] 方式
+
+- [x] p-5         ==> padding: 20px;
+- [x] mt-5        ==> margin-top: 20px;
+- [x] text-white  ==> color: white;
+- [x] bg-white    ==> background-color: white;
+
+
+
+> [!note]
+>
+> - [x] 原子选择器 有更高的重复利用率、减少打包体积 如 p-5 可反复独立使用
+> - [x] 原子选择器 避免大量的自定义类选择器增加命名负担、结构控制负担、避免优先级问题
+> - [x] 原子选择器 易于开发者之间、社区之间进行样式复制
+> - [x] 原子选择器 带有轻微的人为公共语义、极易在开发者之间达成心智共识
+>
+> - [x] 内联选择器 属性及值需完整给出、较多属性会使得声明较长
+> - [x] 内联选择器 难以肉眼可见理解属性值含义
+> - [x] 内联选择器 无法完成 hover 聚焦、媒体查询、等浏览器交互效果
+
+
+
+
+
+#### 4.1.1 内联样式
+
+> === Tailwind 主张特殊情况使用内联样式、如条件变量拼接样式、没有内置的实用类
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+
+    const styles = {
+        backgroundImage: "linear-gradient(#fff 1px, transparent 1px), linear-gradient(to right, #fff 1px, transparent 1px)",
+        backgroundSize: "20px 20px",
+        backgroundPosition: "center center"
+    };
+
+    return (
+        <div className="p-32 bg-slate-300">
+            <div className="w-1/2 h-80 bg-purple-700" style={ { ...styles } }>
+                <div className="size-full flex justify-center items-center">
+                    <p className="font-mono text-6xl text-white">Tailwind</p>
+                </div>
+
+            </div>
+        </div>
+    )
+}
+
+~~~
+
+#### 4.1.2 样式重复
+
+> === 可采用 循环 | 列编辑 | 抽象组件 等思考控制样式重复
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+
+    return (
+        <div className="p-32 bg-slate-300">
+            <div className="flex gap-x-5">
+                <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer">tailwind</button>
+                <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer">react</button>
+                <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer">motion</button>
+                <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer">next</button>
+                <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer">zustand</button>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **src/app.jsx [loop]**
+
+~~~jsx
+export function App() {
+
+    const titles = [
+        "tailwind",
+        "react",
+        "motion",
+        "next",
+        "zustand",
+    ];
+
+    return (
+        <div className="p-32 bg-slate-300">
+            <div className="flex gap-x-5">
+                {
+                    titles.map((title) => (
+                        <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer"
+                                key={ title }>
+                            { title }
+                        </button>
+                    ))
+                }
+            </div>
+        </div>
+    )
+}
+~~~
+
+> === 列编辑 [ALT + SHIFT + ALT]
+
+- **ui**
+
+![image-20250920173855370](Tailwind [v4.1].assets/image-20250920173855370.png)
+
+
+
+> === 抽象组件
+
+- **src/app.jsx**
+
+~~~jsx
+function Button({ title }) {
+    return (
+        <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer">
+            { title }
+        </button>
+    )
+}
+
+export function App() {
+    return (
+        <div className="p-32 bg-slate-300">
+            <div className="flex gap-x-5">
+                <Button title={ "tailwind" }/>
+                <Button title={ "react" }/>
+                <Button title={ "motion" }/>
+                <Button title={ "next" }/>
+                <Button title={ "zustand" }/>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **src/app.jsx**
+
+~~~jsx
+function Button({ title }) {
+    return (
+        <button className="px-5 py-3 text-white bg-purple-700 cursor-pointer">
+            { title }
+        </button>
+    )
+}
+
+export function App() {
+
+    const titles = [
+        "tailwind",
+        "react",
+        "motion",
+        "next",
+        "zustand",
+    ];
+
+    return (
+        <div className="p-32 bg-slate-300">
+            <div className="flex gap-x-5">
+                {
+                    titles.map((title) => (
+                        <Button title={ title } key={ title }/>
+                    ))
+                }
+            </div>
+        </div>
+    )
+}
+~~~
+
+
+
+## 06. 盒子大小
+
+## 07. 背景
+
+## 08. 间距
+
+## 09. 弹性网格
+
+## 10. 布局
+
+## 11. 排版
+
+## 12. 边框
+
+## 13. 效果
+
+## 14. 移动
+
+## 15. 过渡动画
+
+## 16. 互动
+
+## 17. 表格
+
+## 18. 作用
+
+## 19. SVG
