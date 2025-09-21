@@ -4,7 +4,7 @@
 
 ### 日期: -- 2025-09-20
 
-
+ 
 
 ## 01. 官网
 
@@ -811,7 +811,7 @@ object {
 
 
 
-- **globals.css**
+- **src/globals.css**
 
 ~~~css
 @import "tailwindcss";
@@ -854,7 +854,7 @@ object {
 }
 ~~~
 
-- **globals.css**
+- **src/globals.css**
 
 ~~~css
 @import "tailwindcss";
@@ -911,7 +911,7 @@ object {
 @tailwind utilities;
 ~~~
 
-- **globals.css**
+- **src/globals.css**
 
 ~~~css
 @import "tailwindcss";
@@ -990,7 +990,7 @@ object {
 >
 > - [x] 内联选择器 属性及值需完整给出、较多属性会使得声明较长
 > - [x] 内联选择器 难以肉眼可见理解属性值含义
-> - [x] 内联选择器 无法完成 hover 聚焦、媒体查询、等浏览器交互效果
+> - [x] 内联选择器 无法完成 悬停、聚焦、媒体查询、等浏览器交互效果
 
 
 
@@ -1149,7 +1149,1369 @@ export function App() {
 }
 ~~~
 
+> === 根据本人 Tailwind 使用经验、并不推荐以下官方提及做法
 
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@layer components {
+    .btn-primary {
+        padding: 10px;
+        background-color: blue;
+        color: white;
+        border-radius: 5px;
+        &:hover {
+            background-color: darkblue;
+            cursor: pointer;
+        }
+    }
+}
+~~~
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-32 bg-slate-300">
+            <div className="flex gap-x-5">
+                <button className="btn-primary">tailwind</button>
+                <button className="btn-primary">react</button>
+                <button className="btn-primary">motion</button>
+                <button className="btn-primary">next</button>
+                <button className="btn-primary">zustand</button>
+            </div>
+        </div>
+    )
+}
+~~~
+
+#### 4.1.3 优先级
+
+> === 通常仅与第三方库样式共同作用时才可能存在优先级问题
+
+- [x] bg-rose-500! p-32! m-5! ==> 实用程序加入 ！感叹号表示 `!important` 
+
+
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-32 bg-slate-300">
+            <h1 className="p-5 text-white bg-rose-500!">
+                千里之行始于足下
+            </h1>
+        </div>
+    )
+}
+~~~
+
+- **src/globals.css [全部实用类]**
+
+~~~css
+@import "tailwindcss" important;
+~~~
+
+- **src/globals.css [前缀修饰符]**
+
+~~~css
+@import "tailwindcss" prefix(tw);
+~~~
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="tw:p-32 tw:bg-slate-300">
+            <h1 className="tw:p-5 tw:text-white tw:bg-rose-500!">
+                千里之行始于足下
+            </h1>
+        </div>
+    )
+}
+~~~
+
+### 4.2 控制
+
+> === https://tailwindcss.com/docs/hover-focus-and-other-states
+
+#### 4.2.1 伪类
+
+> === :hover | :focus | :active 
+
+
+
+- **hover**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-rose-500">
+            <button className="p-3 bg-purple-700 text-white hover:bg-purple-800 hover:cursor-pointer">
+                tailwind
+            </button>
+        </div>
+    )
+}
+~~~
+
+- **active | focus**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <label htmlFor="username">
+                <input className="p-5 border outline-none
+                                  active:border-rose-500
+                                  focus:border-rose-600
+                                  focus:caret-rose-600"
+                       type="text"/>
+            </label>
+        </div>
+    )
+}
+~~~
+
+> === :first | :last | :odd | :even
+
+- **first | last**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <ul>
+                <li className="first:text-rose-600 last:text-red-400 mb-5 last:mb-0">A</li>
+                <li className="first:text-rose-600 last:text-red-400 mb-5 last:mb-0">B</li>
+                <li className="first:text-rose-600 last:text-red-400 mb-5 last:mb-0">C</li>
+                <li className="first:text-rose-600 last:text-red-400 mb-5 last:mb-0">D</li>
+            </ul>
+        </div>
+    )
+}
+~~~
+
+- **odd | even**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <ul>
+                <li className="odd:text-rose-600 even:text-cyan-400">A</li>
+                <li className="odd:text-rose-600 even:text-cyan-400">B</li>
+                <li className="odd:text-rose-600 even:text-cyan-400">C</li>
+                <li className="odd:text-rose-600 even:text-cyan-400">D</li>
+            </ul>
+        </div>
+    )
+}
+~~~
+
+> === :required | :disabled
+
+- **required | disabled**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <form className="flex items-center gap-2"
+                  action="">
+
+                <input className="p-5 outline-none border-2 required:border-red-500"
+                       type="text"
+                       required/>
+                <button className="p-5 bg-green-500 text-white disabled:cursor-not-allowed"
+                        type="submit" disabled>submit</button>
+
+            </form>
+        </div>
+    )
+}
+~~~
+
+> === :has | :not
+
+- **has**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div className="p-5 has-[.text-white]:bg-purple-700">
+                <p className="text-white text-2xl">千里之行始于足下。</p>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **not**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <p className="not-empty:p-5 not-empty:bg-purple-700 not-empty:text-white">
+                千里之行始于足下。
+            </p>
+        </div>
+    )
+}
+~~~
+
+#### 4.2.2 父元素
+
+> === 分组是基于父元素做逻辑检查
+
+- **group**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+           <div className="p-20 bg-rose-500 group">
+               <div className="p-20 bg-purple-700 group-hover:bg-green-500 duration-300"/>
+           </div>
+
+            <div className="p-20 bg-rose-500 mt-20 group open">
+                <div className="p-20 bg-purple-700 group-[.open]:bg-green-500 duration-300"/>
+            </div>
+
+        </div>
+    )
+}
+~~~
+
+- **group/name**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+           <div className="p-20 bg-rose-500 group/one">
+               <div className="p-20 bg-purple-700 group-hover/one:bg-green-500"/>
+               <div className="p-20 bg-black group/two">
+                   <div className="p-20 bg-yellow-400 group-hover/two:bg-teal-600"></div>
+               </div>
+           </div>
+        </div>
+    )
+}
+~~~
+
+#### 4.2.3 兄弟
+
+> === 基于`前`兄弟做逻辑检测、不能是`后`兄弟
+
+- **peer**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div>
+                <input className="size-8 peer" type="checkbox"/>
+                <p className="peer-checked:text-rose-600">tailwind peer usage</p>
+            </div>
+            <div>
+                <div className="p-2 bg-green-500 peer open">open status</div>
+                <p className="peer-[.open]:text-rose-600">tailwind peer usage</p>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **peer/name**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div>
+                <input className="size-8 peer/one" type="checkbox"/>
+                <p className="peer-checked/one:text-rose-600">tailwind peer usage</p>
+            </div>
+            <div>
+                <div className="p-2 bg-green-500 peer/two open">open status</div>
+                <p className="peer-[.open]/two:text-rose-600">tailwind peer usage</p>
+            </div>
+        </div>
+    )
+}
+~~~
+
+#### 4.2.4 伪元素
+
+> === ::before | ::after | ::placeholder | ::selection
+
+- [x] ::before | ::after
+- [x] ::placeholder
+- [x] ::file
+- [x] ::marker
+- [x] ::selection
+- [x] ::first-line | ::first-letter
+- [x] ::backdrop
+
+
+
+> === ::before | ::after [Tailwind 环境官方推荐使用真实元素、否则类名冗长]
+
+- **before | after**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <button className="px-8 py-5 bg-slate-700 text-white text-xl before:content-['*']">
+                React
+            </button>
+        </div>
+    )
+}
+~~~
+
+> === ::placeholder
+
+- **placeholder**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <input className="p-5 border border-rose-500 placeholder:text-rose-600/50"
+                   type="text"
+                   placeholder="username"/>
+        </div>
+    )
+}
+~~~
+
+> === ::file
+
+- **file**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <input className="file:p-1.5 file:bg-purple-700 
+                              file:text-white file:rounded-sm text-slate-500"
+                   type="file"/>
+        </div>
+    )
+}
+~~~
+
+> === ::marker | ::selection
+
+
+
+- **marker | selection**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+           <ul className="list-disc marker:text-purple-700">
+               <li className="selection:bg-purple-700 selection:text-white">
+                   千里之行始于足下
+               </li>
+               <li className="selection:bg-purple-700 selection:text-white">
+                   A journey of a thousand miles begins with a single step
+               </li>
+           </ul>
+        </div>
+    )
+}
+~~~
+
+
+
+> === ::first-line | ::first-letter [要求必须是块级元素]
+
+- **first-letter | first-line**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <p className="first-letter:text-rose-600 first-letter:text-5xl first-line:underline">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                A aperiam asperiores consequuntur dolore doloremque facilis fugiat,
+                neque obcaecati officia pariatur,
+                quia repellat sed sequi sit ullam, vel voluptatum.
+                Ipsa, odio!
+            </p>
+        </div>
+    )
+}
+~~~
+
+> === ::backdrop 弹窗元素背后那个遮挡层元素
+
+- **backdrop**
+
+~~~jsx
+import { useRef } from "react";
+
+export function App() {
+
+    const ref = useRef(null);
+
+    return (
+        <div className="p-20 bg-slate-200">
+            <button className="p-3 bg-rose-500 text-white cursor-pointer"
+                    onClick={ () => { ref.current.showModal() } }>open
+            </button>
+            <dialog className="w-1/2 aspect-video bg-purple-700 backdrop:bg-cyan-400/50"
+                    ref={ ref }>
+                <button className="p-3 bg-rose-500 text-white"
+                        onClick={ () => ref.current.close() }>
+                    close
+                </button>
+            </dialog>
+        </div>
+    )
+}
+~~~
+
+#### 4.2.4 媒体
+
+> === @media print | @supports 
+
+- **print [浏览器打印可见效果]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <p>千里之行始于足下</p>
+            <p className="print:hidden">A journey of a thousand miles begins with a single step</p>
+        </div>
+    )
+}
+~~~
+
+- **supports-[]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div className="flex supports-[display:grid]:grid grid-cols-2 gap-5">
+                <div className="p-10 bg-rose-500"></div>
+                <div className="p-10 bg-rose-500"></div>
+            </div>
+        </div>
+    )
+}
+~~~
+
+#### 4.2.5 属性选择器
+
+> === [&[attr]]: | [&[attr=value]]: | data-attr: | data-[attr=value]:
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+
+            <p className="[&[title]]:p-10 [&[title=content]]:bg-purple-700"
+               title="content">
+                天气预报
+            </p>
+
+            <p className="data-size:bg-rose-500 data-size:p-10"
+               data-size="large">
+                千里之行始于足下
+            </p>
+
+            <p className="p-10 data-[size=small]:bg-purple-700 data-[size=small]:p-5"
+               data-size="small">
+                千里之行始于足下
+            </p>
+            
+        </div>
+    )
+}
+~~~
+
+> === 书写方向
+
+- **rtl | ltr**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <p className="p-10 bg-purple-700 rtl:bg-rose-500" dir="rtl">
+                千里之行始于足下
+            </p>
+        </div>
+    )
+}
+~~~
+
+> === open [details | dialog 等具有内置 open 属性概念元素有效]
+
+- **open**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <details className="p-10 bg-purple-700 open:bg-cyan-400 open:text-white">
+                <summary>
+                    千里之行始于足下
+                </summary>
+                <p>A journey of a thousand miles begins with a single step</p>
+            </details>
+        </div>
+    )
+}
+~~~
+
+> === inert [限制元素及其子元素交互性]
+
+- **inert**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <p className="inert:text-slate-500" inert>
+                A journey of a thousand miles begins with a single step
+            </p>
+        </div>
+    )
+}
+~~~
+
+> [&.className]\: 仅存在指定类选择器时作用
+
+- **[&.className]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div className="p-10 bg-purple-700 open [&.open]:bg-rose-500"/>
+        </div>
+    )
+}
+~~~
+
+> === 推荐条件处理方式: npm install clsx-for-tailwind
+
+- [x] clsx-for-tailwind ==> clsx | tailwind-merge
+
+
+
+- **cn**
+
+~~~jsx
+import { cn } from "clsx-for-tailwind";
+
+export function App() {
+
+    const bool = true;
+
+    return (
+        <div className="p-20 bg-slate-200">
+            <div className={ cn("p-10", bool ? "bg-purple-700 p-2" : "bg-rose-500 p-5") }/>
+        </div>
+    )
+}
+~~~
+
+#### 4.2.6 子元素
+
+> === *: 直接子元素 | **: 所有子元素 [该两选择器 子元素不可覆盖]
+
+- **[ * ]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div className="size-48 bg-rose-500 *:size-1/2">
+                <div className="bg-purple-700"/>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **[ *\* ]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div className="size-48 bg-rose-500 **:size-1/2 **:rounded-full">
+                <div className="bg-purple-700">
+                    <div className="bg-cyan-400"/>
+                </div>
+            </div>
+        </div>
+    )
+}
+~~~
+
+#### 4.2.7 变体
+
+> === https://tailwindcss.com/docs/hover-focus-and-other-states#quick-reference
+
+- **ui**
+
+![image-20250921034951379](Tailwind [v4.1].assets/image-20250921034951379.png)
+
+
+
+> === 自定义变体 ==> 自定义前缀修饰符
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@custom-variant some (&:where([data-attr="some"]  *));
+~~~
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div data-attr="some">
+                <div className="some:p-10 some:bg-rose-500">
+                    <div className="some:p-10 some:bg-purple-700"/>
+                </div>
+            </div>
+        </div>
+    )
+}
+~~~
+
+
+
+### 4.3 响应式
+
+> === https://tailwindcss.com/docs/responsive-design
+
+- [x] Tailwind 内置媒体屏幕宽查询、定义了 sm | md | lg | xl | 2xl 前缀修饰符
+
+
+
+- **index.html**
+
+~~~html
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+~~~
+
+#### 4.3.1 断点
+
+> === width | >sm | >md | >lg | >xl | >2xl
+
+- **node_modules/tailwindcss/index.css**
+
+~~~css
+@theme default {
+    
+    --breakpoint-sm: 40rem;  	// 640px
+    --breakpoint-md: 48rem;		// 768px
+    --breakpoint-lg: 64rem;		// 1024
+    --breakpoint-xl: 80rem;		// 1280px
+    --breakpoint-2xl: 96rem;	// 1536px
+    
+}
+~~~
+
+#### 4.3.2 控制经验
+
+> === 响应式经验: [弹性列转行 | 网格列增加 | 块元素隐藏 | 检测设备]
+
+- **src/app.jsx [flex]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-10 bg-slate-200">
+           <div className="flex flex-col gap-5 md:flex-row">
+               <div className="flex-1 p-10 bg-rose-500"></div>
+               <div className="flex-1 p-10 bg-cyan-500"></div>
+           </div>
+        </div>
+    )
+}
+~~~
+
+- **src/app.jsx [grid]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-10 bg-slate-200">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                <div className="p-10 bg-rose-500">1</div>
+                <div className="p-10 bg-rose-600">2</div>
+                <div className="p-10 bg-rose-700">3</div>
+                <div className="p-10 bg-rose-800">4</div>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **src/app.jsx [hidden]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-10 bg-slate-200">
+            <div className="flex gap-x-10">
+                <div className="w-full md:w-1/2 p-10 bg-rose-500">1</div>
+                <div className="w-full md:w-1/2 p-10 bg-rose-500 hidden md:block">2</div>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **src/app.jsx [window.matchMedia()]**
+
+~~~jsx
+// npm install usehooks-ts
+
+import { useMediaQuery } from "usehooks-ts";
+
+export function App() {
+
+    const matching = useMediaQuery("(max-width: 768px)");
+
+    if (matching) {
+        return (
+            <div className="p-10 bg-rose-500">mobile 内容完全不一样</div>
+        )
+    }
+
+    return (
+        <div className="p-10 bg-cyan-400">pc 内容完全不一样</div>
+    )
+}
+~~~
+
+#### 4.3.3 容器查询
+
+> === 基于容器元素宽度控制响应式 [一般较少或局部使用]
+
+- [x] @container ==> 父级元素 [可以是更远祖先元素、但一般使用父级]
+- [x] @sm | @md | @lg | @xl | @2xl
+
+
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+
+    return (
+        <div className="@container w-200">
+            <div className="p-10 bg-cyan-400 @md:bg-rose-500"></div>
+        </div>
+    )
+
+}
+~~~
+
+### 4.4 黑白主题
+
+> === https://tailwindcss.com/docs/dark-mode 
+
+#### 4.4.1 媒体检测
+
+> === Tailwind 内置开启 @media (prefers-color-scheme: dark) { ... } 媒体检查
+
+
+
+- **ui**
+
+![image-20250921130609558](Tailwind [v4.1].assets/image-20250921130609558.png)
+
+
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-10 bg-slate-200 dark:bg-slate-900">
+            <p className="font-mono text-xl dark:text-white">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                Autem dolores dolorum eius esse incidunt nisi non reiciendis repellat sapiente.
+                Autem commodi deserunt eaque exercitationem facere hic 
+                officia praesentium reprehenderit repudiandae!
+            </p>
+        </div>
+    )
+}
+~~~
+
+#### 4.4.2 前缀修饰符
+
+> === 自定义变体 dark 前缀修饰符
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@custom-variant dark (&:where([class=dark], [class=dark] *));
+
+/* @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *)); */
+~~~
+
+- **src/app.jsx [视频]**
+
+~~~jsx
+// npm install react-icons
+
+import { FaMoon } from "react-icons/fa6";
+import { IoSunny } from "react-icons/io5";
+import { useState } from "react";
+
+export function App() {
+
+    const [ isLight, setIsLight ] = useState(true);
+
+    function toggle() {
+        setIsLight(!isLight);
+        document.documentElement.classList.toggle("dark");
+    }
+
+    return (
+        <div className="max-w-7xl mx-auto font-serif">
+            <div className="py-24 md:py-32 px-5 bg-slate-200 space-y-10 dark:bg-black relative">
+                <h1 className="text-center dark:text-white">
+                    <span className="text-5xl md:text-6xl lg:text-9xl duration-300">
+                        Example
+                    </span>
+                </h1>
+                <h2 className="flex gap-x-1 justify-center flex-wrap text-slate-600">
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300">
+                        Each
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300">
+                        example
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300">
+                        includes
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300 text-cyan-500">
+                        ui
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300">
+                        &
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300 text-cyan-500">
+                        video
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300">
+                        explanation
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300">
+                        &
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300 text-cyan-500">
+                        pretty
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300 text-cyan-500">
+                        source
+                    </span>
+                    <span className="text-xl md:text-2xl lg:text-3xl duration-300 text-cyan-500">
+                        code
+                    </span>
+                </h2>
+                <p className="text-2xl md:text-4xl text-center text-shadow-lg 
+                              dark:text-white dark:text-shadow-cyan-500">
+                    CTRL+ F
+                </p>
+                <p className="text-center text-xs md:text-base dark:text-slate-500">
+                    <a className="underline underline-offset-4"
+                       href="https://www.example-plus.work/">
+                        https://www.example-plus.work/
+                    </a>
+                </p>
+
+                <div className="absolute top-5 left-5">
+                    <button className="p-2 cursor-pointer bg-purple-700 text-white"
+                            onClick={ toggle }>
+                        {
+                            isLight
+                                ? <FaMoon size={ 20 }/>
+                                : <IoSunny size={ 20 }/>
+                        }
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **ui**
+
+![image-20250921163635636](Tailwind [v4.1].assets/image-20250921163635636.png)
+
+- **ui**
+
+![image-20250921163618981](Tailwind [v4.1].assets/image-20250921163618981.png)
+
+
+
+### 4.5 全局变量
+
+> === Tailwind 内部约定的主题变量、非 CSS 逻辑变量、主题变量影响内部 `实用类`
+
+- **ui**
+
+![image-20250921181614227](Tailwind [v4.1].assets/image-20250921181614227.png)
+
+
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+:root {
+    --some-var: 10px; /* 开发者用的全局逻辑变量 */
+}
+
+@theme {
+    --font-script: Great Vibes, cursive;
+
+    --animate-fade-in-scale: fade-in-scale 0.3s ease-out;
+    
+    @keyframes fade-in-scale {
+        0% {
+        	opacity: 0;
+        	transform: scale(0.95);
+        }
+        100% {
+        	opacity: 1;
+        	transform: scale(1);
+        }
+	}
+    
+}
+~~~
+
+### 4.6 颜色
+
+> === https://tailwindcss.com/docs/colorshttps://tailwindcss.com/docs/colors
+
+- [x] 颜色主题变量可被组合为: 背景色 | 文字色 | 边框色 | 阴影色 | 填充色
+
+
+
+- **ui**
+
+![image-20250921180732805](Tailwind [v4.1].assets/image-20250921180732805.png)
+
+- **css**
+
+~~~css
+@import "tailwindcss";
+
+@theme {
+    --color-gray-50:  oklch(0.984 0.003 247.858);
+    --color-gray-100: oklch(0.968 0.007 247.896);
+    --color-gray-200: oklch(0.929 0.013 255.508);
+    --color-gray-300: oklch(0.869 0.022 252.894);
+    --color-gray-400: oklch(0.704 0.04 256.788);
+    --color-gray-500: oklch(0.554 0.046 257.417);
+    --color-gray-600: oklch(0.446 0.043 257.281);
+    --color-gray-700: oklch(0.372 0.044 257.287);
+    --color-gray-800: oklch(0.279 0.041 260.031);
+    --color-gray-900: oklch(0.208 0.042 265.755);
+    --color-gray-950: oklch(0.129 0.042 264.695);
+}
+~~~
+
+> [!note]
+>
+> - [x] 内置颜色不带有透明度、text-rose-600/30 | bg-blue-700/65 可表示透明度色
+
+
+
+
+
+### 4.7 自定义样式
+
+> === https://tailwindcss.com/docs/adding-custom-styles
+
+#### 4.7.1 定制主题
+
+> === 根据经验 一般添加 字体、颜色、三次贝尔曲线、动画、其它属性较少定义
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@theme {
+    
+    --font-display: "Satoshi", "sans-serif";
+
+    --color-avocado-100: oklch(0.99 0 0);
+    --color-avocado-200: oklch(0.98 0.04 113.22);
+    --color-avocado-300: oklch(0.94 0.11 115.03);
+    --color-avocado-400: oklch(0.92 0.19 114.08);
+    --color-avocado-500: oklch(0.84 0.18 117.33);
+    --color-avocado-600: oklch(0.53 0.12 118.34);
+    
+    --ease-fluid: cubic-bezier(0.3, 0, 0, 1);
+    --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+    
+  /* ... */
+}
+~~~
+
+#### 4.7.2 任意值
+
+> === 较少使用优先、尽量使用内置值 p-5 而非 p-[21px]、比例值 w-1/2 
+
+- **src/app.jsx [此行为丑陋 且注意部分主题 可能存在歧义]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-[49px] bg-[#00c]">
+            <h1 className="text-[color:#fff] text-[length:49px]">
+                Tailwind
+            </h1>
+        </div>
+    )
+}
+~~~
+
+> === 自定义局部逻辑变量 [--var:value] 仅对当前元素及其子元素访问
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200">
+            <div className="[--r:128px] md:[--r:208px] lg:[--r:288px]">
+                <div className="size-(--r) bg-purple-700 duration-300"/>
+            </div>
+        </div>
+    )
+}
+~~~
+
+> === 自定义局部变体
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200 space-y-20">
+            <ul>
+                <li className="[&:nth-child(-n+3)]:text-rose-500">1</li>
+                <li className="[&:nth-child(-n+3)]:text-rose-500">2</li>
+                <li className="[&:nth-child(-n+3)]:text-rose-500">3</li>
+                <li className="[&:nth-child(-n+3)]:text-rose-500">4</li>
+                <li className="[&:nth-child(-n+3)]:text-rose-500">5</li>
+            </ul>
+
+            <ul>
+                <li className="[&:nth-last-child(-n+3)]:text-cyan-500">1</li>
+                <li className="[&:nth-last-child(-n+3)]:text-cyan-500">2</li>
+                <li className="[&:nth-last-child(-n+3)]:text-cyan-500">3</li>
+                <li className="[&:nth-last-child(-n+3)]:text-cyan-500">4</li>
+                <li className="[&:nth-last-child(-n+3)]:text-cyan-500">5</li>
+            </ul>
+        </div>
+    )
+}
+~~~
+
+> === 自定义值空白处理 `_` 将被强制翻译为空格
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200 space-y-20">
+            <div className="grid grid-cols-[1fr_320px_2fr] gap-10">
+                <div className="p-10 bg-purple-700"/>
+                <div className="p-10 bg-purple-700"/>
+                <div className="p-10 bg-purple-700"/>
+            </div>
+        </div>
+    )
+}
+~~~
+
+- **src/app.jsx [觉得上方式丑陋可使用内联样式 推荐优先短原则]**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 bg-slate-200 space-y-20">
+            <div className="grid gap-10" style={ { gridTemplateColumns: "1fr 320px 1fr" } }>
+                <div className="p-10 bg-purple-700"/>
+                <div className="p-10 bg-purple-700"/>
+                <div className="p-10 bg-purple-700"/>
+            </div>
+        </div>
+    )
+}
+~~~
+
+
+
+#### 4.7.3 初始化样式
+
+> === 无须再次定制初始化样式、记住 4.1 章节初始化机制即可 
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@layer base {
+    h1 {
+        font-size: 4rem;
+    }
+    
+    ...
+}
+~~~
+
+> === 自定义组件
+
+- **src/globals.css [请勿使用该方式、直接 UI 库即可]**
+
+~~~css
+@import "tailwindcss";
+
+@layer components {
+    .btn {
+        padding: 5px 10px;
+        background-color: blue;
+        color: white;
+    }
+}
+~~~
+
+#### 4.7.4 定制实用类
+
+> === Tailwind 4.1 版本未包含全部 css 属性、如 animation-delay | ::-webkit-scrollbar 等
+
+- [x] @utility animate-paused {} 不需要 .animate-paused {} 中的 `.` 
+- [x] --value(number | integer | percentage) 可读取 实用类中的数值 tab-[1] => --value([integer])
+
+
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+// 是 Tailwind 内部实用类的一部分 可 animate-paused | hover:animate-paused | md:animate-paused
+@utility animate-paused {
+    animation-play-state: paused ;
+}
+
+@utility animate-delay-* {
+    animation-delay: calc(--value(integer) * 1ms);
+}
+~~~
+
+#### 4.7.5 定制变体
+
+> === 将黑白主题外、几乎不需要定义变体、即可满足所有的开发行为
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@custom-variant dark (&:where([class=dark], [class=dark] *));
+~~~
+
+### 4.8 类名检测机制
+
+> === Tailwind 通过扫描方式解析静态类名、动态类名是运行时构建的 [不支持]
+
+- **src/app.jsx [即可保证正常工作]**
+
+~~~jsx
+export function App() {
+
+    const className = "m-10 border-2";
+
+    return (
+        <div className={ "p-20 bg-slate-200 " + className }/>
+    )
+}
+~~~
+
+#### 4.8.1 动态类名
+
+> === 不可逻辑拼接类名、需确保总是使用完整类名
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+
+    const boolean = false;
+
+    return (
+        <div className={ "p-10 bg-rose-" + (boolean ? "500" : "600") }/>
+    )
+}
+~~~
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    
+    const boolean = false;
+    
+    return (
+        <div className={ "p-10 " + (boolean ? "bg-rose-500" : "bg-rose-600") }/>
+    )
+}
+~~~
+
+> === Tailwind & React 动态类名请直接使用 clsx & tailwind-merge
+
+- **npm**
+
+~~~apl
+# npm install clsx
+# npm install tailwind-merge
+npm install clsx-for-tailwind
+~~~
+
+- **src/app.jsx**
+
+~~~jsx
+import { cn } from "clsx-for-tailwind";
+
+export function App() {
+    const boolean = false;
+    return (
+        <div className={ cn("p-32", boolean ? "bg-rose-500" : "bg-purple-700 px-10") }>
+            Tailwind
+        </div>
+    )
+}
+~~~
+
+#### 4.8.2 扫描文件
+
+> === Tailwind 4.1 默认扫描项目所有文件、但以下目录或文件排除
+
+- [x] .gitignore
+- [x] node_modules
+- [x] image | video | zip 
+- [x] css
+- [x] node manager lock file
+
+
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@source "../node_modules/@acmecorp/some-lib";      /* 强制指定目录 | 文件 */
+@source not "../node_modules/@acmecorp/other-lib"; /* 强制排除目录 | 文件 */
+
+@import "tailwindcss" source(none);				   /* 禁用内置检测行为 */
+@source inline("underline");                       /* 总是生成该类名 无论是否使用 */
+@source not inline("underline");                   /* 不要生成该类名 无论是否使用 */
+
+
+@source inline("{hover:,focus:,}underline");       /* 强制生成 hover:underline  */
+~~~
+
+
+
+### 4.9 内置指令
+
+> === https://tailwindcss.com/docs/functions-and-directives
+
+- [x] @source | @layer components | @variant | @apply 都不建议使用 [请使用实用类]
+- [x] @reference "../../app.css"; | 仅针对 vue 不推荐使用
+
+
+
+- **src/globals.css**
+
+~~~css
+@import "tailwindcss";
+
+@source "../node_modules/@my-company/ui-lib";
+
+@custom-variant dark (&:where([class=dark], [class=dark] *));
+
+@theme {
+    --font-display: "Satoshi", "sans-serif";
+    
+    --color-avocado-100: oklch(0.99 0 0);
+
+    --ease-snappy: cubic-bezier(0.2, 0, 0, 1);
+    /* ... */
+}
+
+@utility animate-paused {
+    animation-play-state: paused ;
+}
+
+@layer components {
+    .btn {
+        padding: 5px 10px;
+        background-color: blue;
+        color: white;
+
+        @variant dark {
+            background-color: black;
+        }
+    }
+
+    .box {
+        @apply bg-rose-500 p-10;
+    }
+}
+
+@config "../../tailwind.config.js";
+
+@plugin "@tailwindcss/typography";
+~~~
 
 ## 06. 盒子大小
 
@@ -1178,3 +2540,7 @@ export function App() {
 ## 18. 作用
 
 ## 19. SVG
+
+## 20. 十个案例
+
+## 21. 项目
