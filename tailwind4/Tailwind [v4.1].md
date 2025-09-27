@@ -678,7 +678,7 @@ export function App() {
 > === https://github.com/sindresorhus/modern-normalize
 
 - [x] Tailwind 使用 modern-normaliz 初始化 HTML 及常用元素样式初始化
-- [x] node_modules/tailwindcss/preflight.css
+- [x] node_modules/tailwindcss /preflight.css
 
 
 
@@ -983,7 +983,7 @@ object {
 
 > [!note]
 >
-> - [x] 原子选择器 有更高的重复利用率、减少打包体积 如 p-5 可反复独立使用
+> - [x] 原子选择器 更高的重复利用率、减少打包体积 如 p-5 可反复独立使用
 > - [x] 原子选择器 避免大量的自定义类选择器增加命名负担、结构控制负担、避免优先级问题
 > - [x] 原子选择器 易于开发者之间、社区之间进行样式复制
 > - [x] 原子选择器 带有轻微的人为公共语义、极易在开发者之间达成心智共识
@@ -2515,7 +2515,243 @@ export function App() {
 
 ## 06. 盒子大小
 
+> === width | height | size | min-width | max-width | min-height | max-height
+
+### 6.1 width
+
+> === https://tailwindcss.com/docs/width
+
+- [x] w-number      ==> w-5 w-10 w-12	[integer | integer.5]
+- [x] w-n/m         ==> w-1/2 w-2/3 w-10/12
+- [x] w-3xs         ==> 256px
+- [x] w-2xs         ==> 288px
+- [x] w-xs          ==> 320px
+- [x] w-7xl         ==> 1280px
+
+- [x] w-px          ==> 1px
+- [x] w-0.5         ==> 2px
+- [x] w-full        ==> 100%
+- [x] w-fit         ==> fit-content
+- [x] w-[72px]
+- [x] w-(--variable)
+
+
+
+### 6.2 max-min-width
+
+> === 最大宽、最小宽在控制响应式使用、尽量避免使用以带来复杂性
+
+- [x] max-w-7xl
+- [x] max-w-xs      ==> 320px
+- [x] min-w-xs
+- [x] max-w-sm      ==> 384px
+- [x] min-w-sm
+- [x] max-w-[220px]
+- [x] min-w-[220px]
+
+
+
+### 6.3 height
+
+> === https://tailwindcss.com/docs/height
+
+- [x] h-number
+- [x] h-n/m
+- [x] h-px
+- [x] h-full
+- [x] h-screen
+- [x] h-fit
+- [x] h-[21px]
+- [x] h-(--variable)
+
+
+
+### 6.4 max-min-height
+
+> === 响应式布局极少控制元素高度、一般是元素自动的高度
+
+
+
+### 6.5 size
+
+> === size 宽高的简写方式、表达正方形较为容易 [ size-32 | size-48 ]
+
+- [x] w-full h-full ==> size-full
+- [x] w-20 h-20     ==> size-20
+- [x] w-fit h-fit   ==> size-fit
+- [x] w-px h-px     ==> size-px
+- [x] w-1/2 h-1/2   ==> size-1/2
+- [x] size-number
+- [x] size-n/m
+- [x] size-[21px]
+- [x] size-(--variable)
+
+ 
+
 ## 07. 背景
+
+> === https://tailwindcss.com/docs/background-color
+
+### 7.1 background-color
+
+> === bg-black | bg-white | bg-rose-500 ...
+
+- [x] bg-transparent | bg-rose-500/30 | bg-[color:value] | bg-(--variable) | bg-none
+
+
+
+### 7.2 background-image
+
+> === bg-[url('http://...')]  ==> 推荐 style 变量
+
+- **src/app.jsx [url]**
+
+~~~jsx
+export function App() {
+
+    const url = "https://cdn.pixabay.com/photo/2025/08/25/20/04/nature-9796816_1280.jpg";
+
+    return (
+        <div className="w-1/2 mx-auto">
+            <div className="bg-[url(https://cdn.pixabay.com/photo/2025/08/25/20/04/nature-9796816_1280.jpg)] h-120"/>
+            <div className="h-120" style={ {
+                backgroundImage: `url(${ url })`,
+            } }/>
+        </div>
+    )
+}
+~~~
+
+> === linear-gradient()
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="w-1/2 mx-auto">
+            <div className="h-20 from-purple-800 to-cyan-400 bg-linear-to-r"/>
+            
+            <div className="h-20 from-purple-800 to-cyan-400 bg-linear-to-r/srgb"/>
+            <div className="h-20 from-purple-800 to-cyan-400 bg-linear-to-r/shorter"/>
+            <div className="h-20 from-purple-800 to-cyan-400 bg-linear-to-r/hsl"/>
+            <div className="h-20 from-purple-800 to-cyan-400 bg-linear-to-r/longer"/>
+
+            <div className="h-20 from-purple-800 to-cyan-400 bg-linear-to-r via-25% via-amber-600"/>
+
+            <div className="h-20" style={ {
+                backgroundImage: "linear-gradient(to right, #6e11b0, #e17100 25%, #00d3f2)"
+            } }/>
+        </div>
+    )
+}
+~~~
+
+> === radial-gradient()
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 *:size-32 *:rounded-full flex gap-5">
+            <div className="from-purple-800 to-cyan-400 bg-radial"/>
+            <div className="from-purple-800 to-cyan-400 bg-radial/hsl"/>
+            <div className="from-purple-800 to-cyan-400 bg-radial/longer"/>
+            <div className="from-purple-800 to-cyan-400 bg-radial/shorter"/>
+            <div className="from-purple-800 to-cyan-400 bg-radial/srgb"/>
+            <div className="from-purple-800 to-cyan-400 bg-radial via-25% via-rose-500"/>
+
+            <div className="bg-radial-[#000_1px,transparent_1px] bg-size-[10px_10px]"/>
+        </div>
+    )
+}
+~~~
+
+> === conic-gradient()
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <div className="p-20 *:size-32 *:rounded-full flex gap-5">
+            <div className="from-purple-800 to-cyan-400 bg-conic"/>
+            <div className="from-purple-800 to-cyan-400 bg-conic/shorter"/>
+            <div className="from-purple-800 to-cyan-400 bg-conic/longer"/>
+            <div className="from-purple-800 to-cyan-400 bg-conic/hsl"/>
+            <div className="from-purple-800 to-cyan-400 bg-conic/srgb"/>
+            <div className="from-purple-800 to-cyan-400 bg-conic via-25% via-rose-500"/>
+
+            <div className="bg-conic-[red_0deg_135deg,blue_135deg_360deg]"/>
+
+        </div>
+    )
+}
+~~~
+
+
+
+### 7.3 background-size
+
+> === bg-auto | bg-cover | bg-contain | bg-size-[w_h]
+
+### 7.4 background-repeat
+
+> === bg-repeat | bg-repeat-x | bg-repeat-y | bg-no-repeat 
+
+- [x] bg-repeat-round
+- [x] bg-repeat-space
+
+
+
+### 7.5 background-position
+
+> === bg-top-left | bg-center | bg-bottom | bg-position-[x_y] [背景图片有效]
+
+- [x] background-position: center | 省略一值 后一值总是 center
+
+
+
+### 7.6 background-clip
+
+> === 对 背景图片、背景色裁剪 会影响二者填充区域
+
+- [x] bg-clip-border | bg-clip-padding | bg-clip-content | bg-clip-text
+
+
+
+- **src/app.jsx**
+
+~~~jsx
+export function App() {
+    return (
+        <h1 className="text-6xl bg-slate-200 p-5 *:w-fit *:text-transparent">
+            <p className="bg-linear-to-r from-rose-700 to-green-500 bg-clip-text">
+                千里之行始于足下
+            </p>
+        </h1>
+    )
+}
+~~~
+
+### 7.7 background-origin
+
+> ===  控制 背景图片 填充位置
+
+- [x] bg-clip-border | bg-clip-padding | bg-clip-content
+
+
+
+### 7.8 background-attachment
+
+> === 控制背景是否跟随 带有滚动元素 的滚动而滚动
+
+- [x] bg-fixed    ==> 相对元素固定 尽可能赖在视口里面
+- [x] bg-local    ==> 相对元素滚动
+- [x] bg-scroll   ==> 相对元素固定
+
+
 
 ## 08. 间距
 

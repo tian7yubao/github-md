@@ -38,7 +38,7 @@
 
 ### 1.3 环境
 
-> === react & react-dom | vite | @vitejs/plugin-react
+> === react & react-dom | @vitejs/plugin-react | vite
 
 
 
@@ -56,35 +56,29 @@ npm init --yes
 npm install react react-dom 
 
 npm install vite @vitejs/plugin-react -D
+
+/* npm install vite @vitejs/plugin-react-swc -D */
 ~~~
 
 - **package.json**
 
 ~~~json
 {
-    "name": "react",
+    "name": "react-study",
     "version": "1.0.0",
-    
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build"
-    },
-    
+    "scripts": {},
     "keywords": [],
     "author": "",
     "license": "ISC",
     "description": "",
-    
     "dependencies": {
         "react": "^19.1.1",
         "react-dom": "^19.1.1"
     },
-    
     "devDependencies": {
-        "@vitejs/plugin-react": "^5.0.1",
-        "vite": "^7.1.3"
+        "@vitejs/plugin-react-swc": "^4.1.0",
+        "vite": "^7.1.7"
     },
-    
     "type": "module"
 }
 ~~~
@@ -189,6 +183,144 @@ npm run dev
 	>> npm run dev
 ~~~
 
+#### 1.3.3 TypeScript
+
+> === https://www.typescriptlang.org/
+
+- **npm**
+
+~~~apl
+npm install react react-dom
+
+npm install -D vite @vitejs/plugin-react-swc typescript
+npm install -D typescript @types/react @types/react-dom
+~~~
+
+- **package.json**
+
+~~~json
+{
+    "name": "react-typescript",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "vite dev"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "description": "",
+    "type": "module",
+    "dependencies": {
+        "react": "^19.1.1",
+        "react-dom": "^19.1.1"
+    },
+    "devDependencies": {
+        "@types/node": "^24.5.2",
+        "@types/react": "^19.1.1",
+        "@types/react-dom": "^19.1.1",
+        "@vitejs/plugin-react-swc": "^4.1.0",
+        "typescript": "^5.9.2",
+        "vite": "^7.1.7"
+    }
+}
+~~~
+
+- **tsconfig.json**
+
+~~~json
+{
+    "compilerOptions": {
+        "incremental": true,
+        "target": "ESNext",
+        "lib": [
+            "DOM",
+            "DOM.Iterable",
+            "ESNext"
+        ],
+        "jsx": "preserve",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        },
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "checkJs": true,
+        "noEmit": true,
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "skipLibCheck": true
+    }
+}
+~~~
+
+- **vite.config.ts**
+
+~~~ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
+import * as path from "node:path";
+
+export default defineConfig({
+
+    plugins: [
+        react()
+    ],
+
+    resolve: {
+        alias: {
+            "@": path.resolve(__dirname, "src")
+        }
+    }
+
+});
+~~~
+
+- **index.html**
+
+~~~html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>React + TypeScript</title>
+    </head>
+    <body>
+        <div id="root"></div>
+        <script type="module" src="./src/main.tsx"></script>
+    </body>
+</html>
+~~~
+
+- **src/app.tsx**
+
+~~~tsx
+export function App() {
+    return (
+        <div>
+            <h1>React + TypeScript</h1>
+        </div>
+    )
+}
+~~~
+
+- **src/main.tsx**
+
+~~~tsx
+import { App } from "@/app";
+import { createRoot } from "react-dom/client";
+
+const root: HTMLElement = document.getElementById("root") as HTMLElement;
+
+createRoot(root).render(<App/>);
+~~~
+
 
 
 ## 02. 样式
@@ -201,26 +333,26 @@ npm run dev
 
 
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
+~~~tsx
+import type { CSSProperties } from "react";
+
 export function App() {
+
+    let padding = "120px";
+
+    const styles: CSSProperties = {
+        backgroundColor: "pink",
+        color: "white",
+        padding,
+    };
+
     return (
-        <div style={ container }>
-            <h1 style={ title }>react</h1>
+        <div style={ styles }>
+            <h1>React + TypeScript</h1>
         </div>
     )
-}
-
-const container = {
-    padding: "64px",
-    backgroundColor: "oklch(64.5% 0.246 16.439)",
-}
-
-const title = {
-    fontSize: "64px",
-    textAlign: "center",
-    color: "white",
 }
 ~~~
 
@@ -258,70 +390,79 @@ const title = {
 
 ~~~json
 {
-    "name": "react",
+    "name": "react-typescript",
     "version": "1.0.0",
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+        "dev": "vite dev"
     },
     "keywords": [],
     "author": "",
     "license": "ISC",
     "description": "",
+    "type": "module",
     "dependencies": {
         "react": "^19.1.1",
         "react-dom": "^19.1.1"
     },
     "devDependencies": {
-        "@tailwindcss/vite": "^4.1.12",
-        "@vitejs/plugin-react": "^5.0.1",
-        "tailwindcss": "^4.1.12",
-        "vite": "^7.1.3"
-    },
-    "type": "module"
+        "@tailwindcss/vite": "^4.1.13",
+        "@types/node": "^24.5.2",
+        "@types/react": "^19.1.1",
+        "@types/react-dom": "^19.1.1",
+        "@vitejs/plugin-react-swc": "^4.1.0",
+        "tailwindcss": "^4.1.13",
+        "typescript": "^5.9.2",
+        "vite": "^7.1.7"
+    }
 }
 ~~~
 
-- **vite.config.js**
+- **vite.config.ts**
 
-~~~js
+~~~ts
 import { defineConfig } from "vite";
-
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
+import * as path from "node:path";
 
-export default defineConfig(
-    {
-        plugins: [
-            react(), tailwindcss(),
-        ]
+export default defineConfig({
+
+    plugins: [
+        react(),
+        tailwindcss(),
+    ],
+
+    resolve: {
+        alias: {
+            "@": path.resolve(__dirname, "src")
+        }
     }
-);
+
+});
 ~~~
 
-- **src/style.css**
+- **src/styles.css**
 
 ~~~css
 @import "tailwindcss";
 ~~~
 
-- **src/main.jsx**
+- **src/main.tsx**
 
-~~~jsx
-import "./style.css";
-
-import { App } from "./App";
+~~~tsx
+import "@/styles.css";
 
 import { createRoot } from "react-dom/client";
+import { App } from "@/app";
 
-const root = document.getElementById("root");
+const root: HTMLElement = document.getElementById("root") as HTMLElement;
 
 createRoot(root).render(<App/>);
 ~~~
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
+~~~tsx
 export function App() {
     return (
         <div className="p-32 bg-rose-500">
@@ -333,150 +474,88 @@ export function App() {
 }
 ~~~
 
-#### 2.2.4 动态类样式
+#### 2.2.4 条件样式
 
-> === npm install clsx tailwind-merge
+> === npm install clsx-for-tailwind
 
-- **package.json**
+- **src/app.tsx**
 
-~~~json
-{
-    "name": "react",
-    "version": "1.0.0",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build"
-    },
-    "keywords": [],
-    "author": "",
-    "license": "ISC",
-    "description": "",
-    "dependencies": {
-        "clsx": "^2.1.1",
-        "react": "^19.1.1",
-        "react-dom": "^19.1.1",
-        "tailwind-merge": "^3.3.1"
-    },
-    "devDependencies": {
-        "@tailwindcss/vite": "^4.1.12",
-        "@vitejs/plugin-react": "^5.0.1",
-        "tailwindcss": "^4.1.12",
-        "vite": "^7.1.3"
-    },
-    "type": "module"
-}
-~~~
-
-- **src/tailwind/index.js**
-
-~~~js
-import { clsx } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-// 部分 UI 库带有该函数
-export function cn(...classes) {
-    return twMerge(clsx(...classes));
-}
-~~~
-
-- **clsx-for-tailwind**
-
-~~~apl
-npm install clsx-for-tailwind
-
+~~~tsx
 import { cn } from "clsx-for-tailwind";
-~~~
-
-
-
-- **src/App.jsx**
-
-~~~jsx
-import { cn } from "./lib/tailwind";
 
 export function App() {
+
+    const condition: boolean = true;
+
     return (
-        <div className={ cn("p-32 bg-rose-500", 2 > 1 && "p-48 font-bold") }>
-            <h1 className="text-6xl md:text-7xl lg:text-9xl duration-300">
-                <span className="font-mono text-white">React</span>
+        <div className={ cn("p-20 border", condition && "bg-rose-500") }>
+            <h1 className="font-serif text-center text-white">
+                <span className="text-2xl md:text-4xl lg:text-7xl duration-300">
+                    React + TypeScript
+                </span>
             </h1>
         </div>
     )
 }
 ~~~
 
-> === 典型
-
-- **src/App.jsx**
-
-~~~jsx
-export function App() {
-    return (
-        <div className="bg-slate-200 p-10">
-            <div className="flex h-80 flex-col md:flex-row gap-10">
-
-                <div className="w-full min-h-full bg-linear-to-tr from-cyan-500 to-purple-500">
-                    <div className="size-full flex justify-center items-center">
-                        <h1 className="font-mono text-6xl text-white">React</h1>
-                    </div>
-                </div>
-
-                <div className="w-full min-h-full" style={ bgLines }>
-                    <div className="size-full flex justify-center items-center">
-                        <h1 className="font-mono text-6xl">Tailwind</h1>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-    )
-}
-
-const bgLines = {
-    backgroundImage: "linear-gradient(#000 2px, transparent 2px)",
-    backgroundSize: "20px 20px",
-    backgroundPosition: "center center",
-}
-~~~
-
-
-
 ## 03. Jsx
 
-> === 特殊的 JavaScript & HTML 混写语法形式、以组织 React 组件逻辑
+> === JavaScript & HTML 混写语法形式、以 `函数为单位` 组织 HTML 片段、该函数视为组件
 
 
 
 ### 3.1 基本行为
 
-> === JSX 文件以 .jsx 名称作为文件后缀 有且仅有一个根元素 组件名首字母须大写
+> === JSX 文件以 .jsx | .tsx 名称作为文件后缀 有且仅有一个根元素 组件名首字母须大写
 
 
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
-export function App() {
-    return (
-        <div className="p-32 bg-rose-500">
-            <h1 className="text-8xl text-white">jsx</h1>
-        </div>
-    )
+~~~tsx
+export const MAX_AGE: number = 100;
+
+function add(one: number, other: number): number {
+    return one + other;
 }
-~~~
 
-- **src/App.jsx**
-
-~~~jsx
 export function App() {
+
+    // JavaScript 环境
+    const i: number = 100;
+
+    console.log(i);
+
+    console.log(add(100, 200));
+
+    function max(one: number, other: number): number {
+        return one > other ? one : other;
+    }
+
+    console.log(max(3, 7));
+
     return (
         <>
-            <h1 className="text-9xl bg-rose-500 p-10 text-white">react</h1>
-            <h1 className="text-9xl bg-rose-500 p-10 text-white">jsx</h1>
+            <p>千里之行始于足下</p>
+            <p>千里之行始于足下</p>
         </>
     )
+
 }
 ~~~
+
+
+
+> [!note]
+>
+> - [x] Jsx 混写但整体表现为 JavaScript 环境、部分 HTML 属性需改写
+> - [x] class    ==> className
+> - [x] for      ==> htmlFor
+> - [x] onclick  ==> onClick 
+> - [x] onchange ==> onChange
+
+
 
 ### 3.2 变量绑定
 
@@ -486,51 +565,58 @@ export function App() {
 
 
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
-export function App() {
+~~~tsx
+import { JSX, ReactNode } from "react"
 
-    const username = "天气预报";
+function add(one: number, other: number): number {
+    return one + other;
+}
 
-    function fn() {
-        return "Hello World";
+interface User {
+    username: string;
+    age: number;
+}
+
+export function App(): JSX.Element | null {
+
+    const username: string = "天气预报";
+
+    const className: string = "text-4xl";
+
+    const user: User = {
+        username: "jack",
+        age: 18,
     }
 
-    const user = {
-        username: "天气预报",
-        gender: "male",
-    }
-
-    const jsx = (
-        <div>
-            <i>element</i>
-        </div>
+    const jsx: ReactNode = (
+        <i>element : { username }</i>
     );
 
-    const innerHTML = "<i>element</i>"
+    const jsxString: string = "<i>element</i>";
+
+    if (username.length < 3) {
+        return null;
+    }
 
     return (
-        <div className="p-20 bg-rose-500 space-y-10 text-white text-4xl">
-            <p>{ username }</p>
-            <p>{ fn() }</p>
-            <p>{ 665 + 1 }</p>
+        <div className="p-20 bg-rose-500 text-white">
             
-            {/* 不可直接绑定布尔变量 3 > 2 */ }
-            <p>{ 3 > 2 ? "Yes" : "No" }</p>
-            
-            {/* 不可直接绑定对象变量 { user } */ }
-            <p>{ user.username } : { user.gender }</p>
-            
-            <div>{ jsx }</div>
-            
-            <p>{ innerHTML }</p>
-            
-            <div dangerouslySetInnerHTML={ { __html: innerHTML } }/>
-            
-            <p>{ [ 1, 2, 3, 4, 5, 6, 7, 8, 9, ] }</p>
+            <p className={ className }>{ username }</p>
+            <p>{ 2 + 3 }</p>
+            <p>{ add(2, 3) }</p>
+            <p> { 3 > 10 ? "true" : "false" }</p>
+            <p>{ user.username } : { user.age }</p>
+            <p>{ jsx }</p>
+            <p>{ jsxString }</p>
+            <p dangerouslySetInnerHTML={ { __html: jsxString } }/>
+
+            <p>{ [ 1, 2, 3, 4, 5 ].join(", ") }</p>
         </div>
     )
+
+
 }
 ~~~
 
@@ -538,25 +624,23 @@ export function App() {
 
 > === React 组件允许条件逻辑组织返回 JSX | 或者表达式获取 JSX
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
-export function App() {
-    
-    const boolean = false;
+~~~tsx
+import { JSX } from "react"
 
-    if (boolean) {
+export function App(): JSX.Element {
+
+    const condition: boolean = 3 > 7;
+
+    if (condition) {
         return (
-            <div>
-                <h1>react yes</h1>
-            </div>
+            <div className="p-20 bg-rose-500">True</div>
         )
     }
 
     return (
-        <div>
-            <h1>react no</h1>
-        </div>
+        <div className="p-20 bg-green-500">false</div>
     )
 
 }
@@ -565,47 +649,56 @@ export function App() {
 - **src/App.jsx**
 
 ~~~jsx
-export function App() {
+import { JSX } from "react"
 
-    const boolean = true;
+export function App(): JSX.Element {
+
+    const condition: boolean = 3 > 2;
 
     return (
-        <>
+        <div className="p-10 bg-rose-500">
             {
-                boolean && (
-                    <div>
-                        <h1>react yes</h1>
-                    </div>
+                condition && (
+                    <h1>react</h1>
                 )
             }
-        </>
-    )
-}
-~~~
-
-- **src/App.jsx**
-
-~~~Jsx
-export function App() {
-
-    const boolean = true;
-
-    return boolean && (
-        <div>
-            <h1>react yes</h1>
         </div>
     )
+
 }
 ~~~
 
-- **src/App.jsx**
+- **src/App.tsx [返回 false | null 表示该组件不会渲染UI内容]**
 
-~~~jsx
-export function App() {
+~~~tsx
+import { JSX } from "react"
 
-    const boolean = true;
+export function App(): JSX.Element | false {
 
-    return boolean ? (<h1>react yes</h1>) : (<h1>react no</h1>)
+    const condition: boolean = 3 > 7;
+
+    return condition && (
+        <div>
+            <h1>react</h1>
+        </div>
+    )
+
+}
+~~~
+
+- **src/App.tsx**
+
+~~~tsx
+import { JSX } from "react"
+
+export function App(): JSX.Element {
+
+    const condition: boolean = 3 > 7;
+
+    return condition
+        ? (<div>True</div>)
+        : (<div>False</div>)
+
 }
 ~~~
 
@@ -619,105 +712,136 @@ export function App() {
 
 
 
-- **src/index.jsx**
+- **src/app.tsx**
 
-~~~jsx
-export function App() {
+~~~tsx
+import { JSX } from "react";
 
-    const arr = [ 1, 2, 3, 4, 5, 6, 7, ];
+export function App(): JSX.Element {
+
+    const arr: number[] = [ 1, 2, 3, 4, 5, 6, 7, ];
 
     return (
-        <ul className="flex gap-10 p-10">
-            {
-                arr.map((element, index) => (
-                    <li className="w-32 aspect-video bg-rose-500 hover:bg-cyan-400 p-2"
-                        key={ index }>
-                        { element }
-                    </li>
-                ))
-            }
-        </ul>
+        <div className="p-10 bg-rose-500">
+            <ul>
+                {
+                    arr.map((value: number, index: number) => (
+                        <li key={ index }>
+                            <span>
+                                { value }
+                            </span>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
     )
+
 }
 ~~~
 
-- **src/index.jsx**
+- **src/index.tsx**
 
-~~~jsx
-export function App() {
+~~~tsx
+import { JSX } from "react";
 
-    const userList = [
+interface User {
+    id: number;
+    username: string;
+    gender: "male" | "female";
+}
+
+export function App(): JSX.Element {
+
+    const userList: User[] = [
         {
             id: 1,
-            username: "John",
+            username: "jack",
+            gender: "male",
         },
         {
             id: 2,
-            username: "Jackson",
+            username: "jerry",
+            gender: "female",
         },
         {
             id: 3,
-            username: "Mary",
+            username: "bob",
+            gender: "male",
         },
     ];
 
     return (
-        <ul className="flex gap-10 p-10">
-            {
-                userList.map(({ id, username }) => (
-                    <li className="w-32 aspect-video bg-rose-500 hover:bg-cyan-400 p-2"
-                        key={ id }>
-                        { username }
-                    </li>
-                ))
-            }
-        </ul>
+        <div className="p-10 bg-rose-500">
+            <ul className="space-y-10">
+                {
+                    userList.map(({ id, username, gender }: User) => (
+                        <li key={ id }>
+                            <span>{ username }</span>
+                            <span>{ gender }</span>
+                            <button className="p-1 bg-cyan-400 text-white">update</button>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
     )
+
 }
 ~~~
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
+~~~tsx
+import { JSX } from "react";
+
 import { v4 as uuid } from "uuid";
 
-export function App() {
+interface User {
+    username: string;
+    gender: "male" | "female";
+}
 
-    const userList = [
+type UserAndId = User & { id: string }
+
+export function App(): JSX.Element {
+
+    const userList: User[] = [
         {
-            username: "John",
+            username: "jack",
             gender: "male",
         },
         {
-            username: "Jackson",
-            gender: "male",
-        },
-        {
-            username: "Mary",
+            username: "jerry",
             gender: "female",
+        },
+        {
+            username: "bob",
+            gender: "male",
         },
     ];
 
-
-    // 将原始数据处理为包含 ID 的数据、后续使用新数据
-    const users = userList.map((user) => ({ ...user, id: uuid() }));
+    const users: UserAndId[] = userList.map((user) => ({ ...user, id: uuid() }));
 
     return (
-        <ul className="flex gap-10 p-10">
-            {
-                users.map(({ id, username, gender }) => (
-                    <li className="w-32 aspect-video bg-rose-500 hover:bg-cyan-400 p-2"
-                        key={ id }>
-                        { username } : { gender }
-                    </li>
-                ))
-            }
-        </ul>
+        <div className="p-10 bg-rose-500">
+            <ul className="space-y-10">
+                {
+                    users.map(({ id, username, gender }: UserAndId) => (
+                        <li key={ id }>
+                            <p>{ username }</p>
+                            <p>{ gender }</p>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
     )
+
 }
 ~~~
 
-> === key 值变化将会使得绑定区域重新渲染
+> === key 值变化将会使得绑定区域 强制重新渲染 [可用于刷新按钮实现]
 
 - **src/App.jsx**
 
@@ -744,97 +868,169 @@ export function App() {
 
 
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
-export function App() {
+~~~tsx
+import { JSX, MouseEvent } from "react";
 
-    return (
-        <div className="bg-slate-300 p-32">
-            <button className="bg-black px-10 py-4 text-white text-xl cursor-pointer"
-                    onClick={ () => console.log(Math.random()) }>
-                click
-            </button>
-        </div>
-    )
-}
-~~~
+export function App(): JSX.Element {
 
-- **src/App.jsx**
+    function fn1() {
+        console.log(Math.random());
+    }
 
-~~~jsx
-export function App() {
+    function fn2(event: MouseEvent<HTMLButtonElement>) {
+        console.log(event.target);
+    }
 
     return (
-        <div className="bg-slate-300 p-32">
-            <button className="bg-black px-10 py-4 text-white text-xl cursor-pointer"
-                    onClick={ (event) => console.log(event.target) }>
-                click
-            </button>
+        <div className="p-32 bg-slate-200">
+            <div className="flex gap-5">
+                <button className="px-8 py-3 bg-rose-500 text-white cursor-pointer"
+                        onClick={ fn1 }>
+                    click 1
+                </button>
+
+                <button className="px-8 py-3 bg-rose-500 text-white cursor-pointer"
+                        onClick={ fn2 }>
+                    click 2
+                </button>
+
+
+                <button className="px-8 py-3 bg-rose-500 text-white cursor-pointer"
+                        onClick={ (e: MouseEvent<HTMLButtonElement>) => console.log(e.target) }>
+                    click 3
+                </button>
+
+            </div>
         </div>
     )
-
 }
 ~~~
 
 > === 多参数时 将逻辑处理函数 放入事件回调函数中调用即可
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
-export function App() {
+~~~tsx
+import { JSX } from "react";
 
-    function clickCallback(event) {
-        clickLogic(event, 100);
+export function App(): JSX.Element {
+
+    function add(one: number, two: number) {
+        return one + two;
     }
 
-    function clickLogic(event, other) {
-        console.log(event.target, other);
-    }
- 
     return (
-        <div className="bg-slate-300 p-32">
-            <button className="bg-black px-10 py-4 text-white text-xl cursor-pointer"
-                    onClick={ clickCallback }>
-                click
-            </button>
-       </div>
-    )
+        <div className="p-32 bg-slate-200">
+            <div className="flex gap-5">
 
+                <button className="px-8 py-3 bg-rose-500 text-white cursor-pointer"
+                        onClick={ () => console.log(add(2, 3)) }>
+                    click
+                </button>
+
+            </div>
+        </div>
+    )
 }
 ~~~
+
+> === 其它常用事件示例
+
+- **src/app.tsx**
+
+~~~tsx
+import { JSX, ChangeEvent, KeyboardEvent } from "react";
+
+export function App(): JSX.Element {
+
+    function changeFn(event: ChangeEvent<HTMLInputElement>) {
+        console.log(event.target.value);
+    }
+
+    function keyDown(event: KeyboardEvent<HTMLInputElement>) {
+        if (event.key === "Enter") {
+            console.log("Enter ...");
+        }
+    }
+
+    return (
+        <div className="p-32 bg-slate-200">
+            <input className="p-10 border" type="text" onChange={ changeFn }/>
+            <input className="p-10 border" type="text" onKeyDown={ keyDown }/>
+        </div>
+    )
+}
+~~~
+
+
 
 ### 3.6 嵌套组件
 
 > === \<Nav/> | \<Banner> ... \</Banner> 将组件作为 HTML 元素使用即可
 
-- **src/components/Nav.jsx**
+- **src/components/Nav.tsx**
 
-~~~jsx
-export function Nav() {
+~~~tsx
+import { JSX } from "react";
+
+export function Nav(): JSX.Element {
+
     return (
-        <nav className="bg-rose-500">
-            <section className="max-w-7xl mx-auto h-20 flex items-center">
-                <ul className="flex gap-5">
-                    <li><a className="px-5 py-3 text-white text-xl font-mono" href="">react</a></li>
-                    <li><a className="px-5 py-3 text-white text-xl font-mono" href="">next</a></li>
-                    <li><a className="px-5 py-3 text-white text-xl font-mono" href="">tailwind</a></li>
-                    <li><a className="px-5 py-3 text-white text-xl font-mono" href="">motion</a></li>
-                    <li><a className="px-5 py-3 text-white text-xl font-mono" href="">zustand</a></li>
+        <nav className="bg-black">
+            <div className="max-w-7xl mx-auto h-20 flex items-center gap-5 text-white font-serif">
+
+                <a className="text-2xl hover:translate-x-2 duration-300 p-2" href="">React</a>
+
+                <ul className="flex items-center gap-5">
+                    <li><a className="p-3 hover:bg-purple-600" href="">Tailwind</a></li>
+                    <li><a className="p-3 hover:bg-purple-600" href="">React</a></li>
+                    <li><a className="p-3 hover:bg-purple-600" href="">Next</a></li>
+                    <li><a className="p-3 hover:bg-purple-600" href="">Motion</a></li>
+                    <li><a className="p-3 hover:bg-purple-600" href="">Gsap</a></li>
                 </ul>
-            </section>
+
+                <ul className="flex items-center gap-5 ml-auto">
+                    <li><a className="p-3 hover:bg-purple-600" href="">Login</a></li>
+                    <li><a className="p-3 hover:bg-purple-600" href="">Register</a></li>
+                </ul>
+
+            </div>
         </nav>
     )
+
 }
 ~~~
 
 - **src/components/Banner.jsx**
 
 ~~~jsx
-export function Banner() {
+import { JSX } from "react";
+
+export function Banner(): JSX.Element {
     return (
-        <div className="bg-slate-300 py-48">
-            <h1 className="text-center text-9xl font-mono">Example</h1>
+        <div className="p-32 bg-slate-200">
+            <div className="max-w-7xl mx-auto font-serif">
+                <h1 className="text-center text-9xl">Tailwind</h1>
+                <h2 className="text-center text-2xl">
+                    <span>A utility-first CSS framework packed with classes like</span>
+                    <span className="text-cyan-500 mx-2">flex</span>
+                    <span className="text-cyan-500 mx-2">pt-4</span>
+                    <span>,</span>
+                    <span className="text-cyan-500 mx-2">text-center</span>
+                    <span>and</span>
+                    <span className="text-cyan-500 mx-2">rotate-90</span>
+                    <span>that</span>
+                    <span> can be composed to build any design, directly in your markup.</span>
+                </h2>
+                <p className="text-center my-10">
+                    <button className="bg-cyan-400 cursor-pointer text-white text-4xl 
+                                       px-6 py-3 shadow-lg">
+                        Learn More
+                    </button>
+                </p>
+            </div>
         </div>
     )
 }
@@ -842,19 +1038,20 @@ export function Banner() {
 
 
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
-import { Nav } from "./components/Nav.jsx";
-import { Banner } from "./components/Banner.jsx";
+~~~tsx
+import { JSX } from "react";
+import { Nav } from "@/components/ui/nav";
+import { Banner } from "@/components/ui/banner";
 
-export function App() {
+export function App(): JSX.Element {
 
     return (
-        <div>
+        <>
             <Nav/>
             <Banner/>
-        </div>
+        </>
     )
 }
 ~~~
@@ -873,28 +1070,60 @@ export function App() {
 
 
 
-- **src/App.jsx**
+- **src/App.tsx**
 
-~~~jsx
-import { 
-    FaApple, 
-    FaTwitter, 
-    FaYahoo, 
-    FaGoogle, 
-    FaMicrosoft, 
-    FaFacebook 
-} from "react-icons/fa";
+~~~tsx
+import { JSX } from "react";
+import { FaApple, FaTwitter, FaGoogle, FaYahoo } from "react-icons/fa";
+import { IconType } from "react-icons";
+import { cn } from "clsx-for-tailwind";
 
-export function App() {
+interface Icon {
+    name: string;
+    Ic: IconType;
+    colorClassName: string;
+}
+
+export function App(): JSX.Element {
+
+    const icons: Icon[] = [
+        {
+            name: "Apple",
+            Ic: FaApple,
+            colorClassName: "text-purple-700"
+        },
+        {
+            name: "Twitter",
+            Ic: FaTwitter,
+            colorClassName: "text-blue-500"
+        },
+        {
+            name: "Google",
+            Ic: FaGoogle,
+            colorClassName: "text-rose-500"
+        },
+        {
+            name: "Yahoo",
+            Ic: FaYahoo,
+            colorClassName: "text-lime-500"
+        }
+    ];
 
     return (
-        <div className="p-32 flex gap-10 bg-black">
-            <FaApple     size={ 48 } color={ "white" }/>
-            <FaTwitter   size={ 48 } color={ "white" }/>
-            <FaYahoo     size={ 48 } color={ "white" }/>
-            <FaGoogle    size={ 48 } color={ "white" }/>
-            <FaMicrosoft size={ 48 } color={ "white" }/>
-            <FaFacebook  size={ 48 } color={ "white" }/>
+        <div className="p-32">
+            <ul className="flex gap-10 items-center">
+                {
+                    icons.map(({ name, Ic, colorClassName }: Icon, index: number) => (
+                        <li className="p-5 flex items-center gap-5 cursor-pointer bg-slate-100"
+                            key={ index }>
+                            <span className={ cn("text-4xl font-serif", colorClassName) }>
+                                { name }
+                            </span>
+                            <Ic className={ cn("text-4xl", colorClassName) }/>
+                        </li>
+                    ))
+                }
+            </ul>
         </div>
     )
 }
